@@ -90,3 +90,6 @@ class ShoppingListAbl {
         }
     }
 }
+
+
+module.exports = ShoppingListAbl;

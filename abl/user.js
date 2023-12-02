@@ -55,4 +55,13 @@ class UserAbl {
             res.status(400).json({message: "Bad request"});
         }
     }
+    async session(req, res){
+        try{
+            res.json(req.body); //todo user session logic
+        }catch(err){
+            res.status(400).json({message: "Bad request"});
+        }
+    }
 }
+
+module.exports = UserAbl;
