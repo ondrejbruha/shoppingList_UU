@@ -10,8 +10,6 @@ class ShoppingListAbl {
                 writer_list: {type: "array", items: {type: "string"}},
                 shoppingList_id: {type: "string"},
                 name: {type: "string"},
-                createdAt: {type: "string"},
-                updatedAt: {type: "string"},
                 required: ["name", "owner_id"]
             }
         }
@@ -20,8 +18,8 @@ class ShoppingListAbl {
             properties: {
                 item_id: {type: "string"},
                 name: {type: "string"},
-                createdAt: {type: "string"},
-                updatedAt: {type: "string"}
+                quantity: {type: "number"},
+                unit: {type: "string"},
             }
 
         }

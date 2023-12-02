@@ -10,11 +10,9 @@ class UserAbl {
                 name: {type: "string"},
                 email: {type: "string"},
                 password: {type: "string"},
-                role: {type: "string"},
-                createdAt: {type: "string"},
-                updatedAt: {type: "string"}
+                role: {type: "string"}
             },
-            required: ["name", "email", "password", "role"]
+            required: ["name", "email", "role"]
         }
     }
     async get(req,res){
