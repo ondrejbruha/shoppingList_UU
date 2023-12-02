@@ -15,7 +15,7 @@ router.put("/", async (req, res)=>{
 router.delete("/", async (req, res)=>{
     await user.delete(req, res);
 })
-router.get("session", async (req, res)=>{
+router.get("/session", async (req, res)=>{
     await user.session(req, res);
 })
 
