@@ -20,6 +20,7 @@ class ShoppingListAbl {
                 name: {type: "string"},
                 quantity: {type: "number"},
                 unit: {type: "string"},
+                done: {type: "boolean"},
             }
 
         }
