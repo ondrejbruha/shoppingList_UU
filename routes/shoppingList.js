@@ -3,7 +3,7 @@ const router = express.Router();
 const ShoppingList = require("../abl/shoppingList");
 const shoppingList = new ShoppingList();
 
-router.get('/', async (req, res) =>{
+router.get('/:id', async (req, res) =>{
     await shoppingList.get(req, res);
 });
 router.post("/", async (req, res)=>{

@@ -3,6 +3,9 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const mongoose = require('mongoose');
+
+mongoose.connect("mongodb+srv://ondrab2000:1234@cluster0.idhrxfr.mongodb.net/?retryWrites=true&w=majority");
 
 const usersRouter = require('./routes/users');
 const shoppingListRouter = require('./routes/shoppingList');
