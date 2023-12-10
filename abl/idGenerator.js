@@ -1,4 +1,4 @@
-import crypto from "crypto";
+const crypto = require('crypto');
 
 function getRandomString() {
     return crypto.randomBytes(16).toString('hex');

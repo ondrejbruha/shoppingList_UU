@@ -1,6 +1,7 @@
 const shoppingListSchema = require('./schemas').shoppingList;
 const mongoose = require("mongoose");
 const generateId = require("./idGenerator");
+const crypto = require("crypto");
 
 class ShoppingListAbl {
     constructor() {
@@ -21,8 +22,8 @@ class ShoppingListAbl {
         try {
             const userId = req?.authUser?.user_id;
             const shoppingListId = req?.params?.id;
-            const shoppingListFromDB = await this.model.findOne({user_id: userId, shoppingList_id: shoppingListId});
-            if(shoppingListFromDB.owner_id !== userId || !shoppingListFromDB.writerList.contains(userId)){
+            const shoppingListFromDB = await this.model.findOne({shoppingList_id: shoppingListId});
+            if(shoppingListFromDB.owner_id !== userId || !shoppingListFromDB.writerList.includes(userId)){
                 res.status(403).json({message: "Forbidden"});
                 return;
             }
@@ -41,7 +42,8 @@ class ShoppingListAbl {
             const userId = req?.authUser?.user_id;
             const shoppingList = req.body;
             shoppingList.user_id = userId;
-            shoppingList.shoppingList_id = await generateId();
+            shoppingList.writerList = [userId, ...shoppingList.writerList ? shoppingList.writerList : []];
+            shoppingList.shoppingList_id = await generateId(this.model, "shoppingList_id");
             const newShoppingList = new this.model(shoppingList);
             await newShoppingList.save();
             res.json(newShoppingList);
@@ -59,7 +61,7 @@ class ShoppingListAbl {
                 return;
             }
             const shoppingListFromDB = await this.model.findOne({user_id: userId, shoppingList_id: shoppingList.shoppingList_id});
-            if(shoppingListFromDB.owner_id !== userId || !shoppingListFromDB.writerList.contains(userId)){
+            if(shoppingListFromDB.owner_id !== userId || !shoppingListFromDB.writerList.includes(userId)){
                 res.status(403).json({message: "Forbidden"});
                 return;
             }
@@ -81,7 +83,7 @@ class ShoppingListAbl {
                 return;
             }
             const shoppingListFromDB = await this.model.findOne({user_id: userId, shoppingList_id: shoppingList.shoppingList_id});
-            if(shoppingListFromDB.owner_id !== userId || !shoppingListFromDB.writerList.contains(userId)){
+            if(shoppingListFromDB.owner_id !== userId || !shoppingListFromDB.writerList.includes(userId)){
                 res.status(403).json({message: "Forbidden"});
                 return;
             }
@@ -95,6 +97,17 @@ class ShoppingListAbl {
     async addItem(req, res) {
         try {
             const item = req.body;
+            const userId = req?.authUser?.user_id;
+            const shoppingListId = req?.params?.id;
+            const shoppingListFromDB = await this.model.findOne({shoppingList_id: shoppingListId});
+            if(shoppingListFromDB.owner_id !== userId || !shoppingListFromDB.writerList.includes(userId)){
+                res.status(403).json({message: "Forbidden"});
+                return;
+            }
+            item.item_id = crypto.randomBytes(16).toString("hex");
+            shoppingListFromDB.items.push(item);
+            shoppingListFromDB.save();
+            res.json(shoppingListFromDB);
 
         } catch (err) {
             res.status(400).json({message: "Bad request"});
@@ -103,7 +116,17 @@ class ShoppingListAbl {
 
     async removeItem(req, res) {
         try {
-            res.json(req.body); //todo shoppingList item removing logic
+            const item_id = req.body.item_id;
+            const userId = req?.authUser?.user_id;
+            const shoppingListId = req?.params?.id;
+            const shoppingListFromDB = await this.model.findOne({shoppingList_id: shoppingListId});
+            if(shoppingListFromDB.owner_id !== userId || !shoppingListFromDB.writerList.includes(userId)){
+                res.status(403).json({message: "Forbidden"});
+                return;
+            }
+            shoppingListFromDB.items = shoppingListFromDB.items.filter((i) => i.item_id !== item_id);
+            shoppingListFromDB.save();
+            res.json(shoppingListFromDB);
         } catch (err) {
             res.status(400).json({message: "Bad request"});
         }

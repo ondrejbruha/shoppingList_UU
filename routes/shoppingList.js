@@ -2,23 +2,24 @@ const express = require('express');
 const router = express.Router();
 const ShoppingList = require("../abl/shoppingList");
 const shoppingList = new ShoppingList();
+const auth = require("../abl/auth");
 
-router.get('/:id', async (req, res) =>{
+router.get('/:id', auth,async (req, res) =>{
     await shoppingList.get(req, res);
 });
-router.post("/", async (req, res)=>{
+router.post("/",auth, async (req, res)=>{
     await shoppingList.post(req,res);
 })
-router.put("/", async (req, res)=>{
+router.put("/:id",auth, async (req, res)=>{
     await shoppingList.put(req, res);
 })
-router.delete("/", async (req, res)=>{
+router.delete("/:id", auth, async (req, res)=>{
     await shoppingList.delete(req, res);
 })
-router.put("/add_item", async (req, res)=>{
+router.put("/add_item/:id",auth, async (req, res)=>{
     await shoppingList.addItem(req, res);
 })
-router.put("/remove_item", async (req, res)=>{
+router.put("/remove_item/:id",auth, async (req, res)=>{
     await shoppingList.removeItem(req, res);
 })
 

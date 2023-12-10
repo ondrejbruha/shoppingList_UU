@@ -3,7 +3,7 @@ const userSchema = require("./schemas").user;
 const hashPassword = require("./hashPassword");
 const sessionGenerator = require("./sessionGenerator");
 const bcrypt = require('bcrypt');
-const generateId = require("./generateId");
+const generateId = require("./idGenerator");
 
 class UserAbl {
     constructor(){
@@ -32,7 +32,7 @@ class UserAbl {
             }
             else {
                 user.password = await hashPassword(user.password);
-                user.user_id = await generateId();
+                user.user_id = await generateId(this.model, "user_id");
                 const newUser = new this.model(user);
                 await newUser.save();
                 res.json({user_id: newUser.user_id, name: newUser.name, email: newUser.email});
