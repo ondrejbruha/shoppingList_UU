@@ -4,6 +4,9 @@ const ShoppingList = require("../abl/shoppingList");
 const shoppingList = new ShoppingList();
 const auth = require("../abl/auth");
 
+// :id - id of shopping list
+
+
 router.get('/:id', auth,async (req, res) =>{
     await shoppingList.get(req, res);
 });
