@@ -56,11 +56,7 @@ class ShoppingListAbl {
         try {
             const userId = req?.authUser?.user_id;
             const shoppingList = req.body;
-            if (shoppingList.user_id !== userId) {
-                res.status(403).json({message: "Forbidden"});
-                return;
-            }
-            const shoppingListFromDB = await this.model.findOne({user_id: userId, shoppingList_id: shoppingList.shoppingList_id});
+            const shoppingListFromDB = await this.model.findOne({shoppingList_id: shoppingList.shoppingList_id});
             if(shoppingListFromDB.owner_id !== userId || !shoppingListFromDB.writerList.includes(userId)){
                 res.status(403).json({message: "Forbidden"});
                 return;
